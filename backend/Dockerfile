@@ -11,7 +11,7 @@ COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiar el resto del código del backend
-COPY backend/ .
+COPY . .
 
 # Exponer el puerto 5000 para Flask
 EXPOSE 5000

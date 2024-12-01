@@ -31,17 +31,17 @@ jobs:
       with:
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/flask-backend:latest
-        context: ./backend
-        file: ./backend/Dockerfile
+        context: backend
+        file: backend/Dockerfile
         cache-to: type=inline
     
-    - name: Build and Push Frntend Docker Image
+    - name: Build and Push Frontend Docker Image
       uses: docker/build-push-action@v4
       with:
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/vue-frontend:latest
-        context: ./frontend
-        file: ./frontend/Dockerfile
+        context: frontend
+        file: frontend/Dockerfile
         cache-to: type=inline
 
     # Deploy to AWS EC2
