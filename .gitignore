@@ -1,0 +1,48 @@
+.DS_Store            # Metadata de macOS
+node_modules/         # Dependencias de npm
+/frontend/node_modules/
+dist/                 # Archivos compilados del frontend
+/frontend/dist/ 
+.env                 # Variables de entorno (globales)
+.env.*.local         # Variables de entorno específicas
+npm-debug.log*       # Logs de npm
+yarn-debug.log*      # Logs de Yarn
+yarn-error.log*
+pnpm-debug.log*
+*.log                # Otros archivos de logs
+.idea                # Configuración de IDEs (IntelliJ, PyCharm)
+.vscode              # Configuración de VSCode
+*.sw?                # Archivos de swap de editores de texto
+/.codigo/
+
+venv/               # Entorno virtual de Python
+/backend/venv/ 
+*.pyc                # Archivos compilados de Python
+__pycache__/         # Caché de Python
+/backend/__pycache__/ 
+instance/            # Carpeta `instance` (configuración sensible, opcional)
+*.db                 # Archivos de bases de datos locales (si los usas)
+/.mypy_cache/        # Caché de MyPy para análisis estático
+/.pytest_cache/      # Caché de Pytest
+
+# Vite
+/.vite/              # Caché de Vite
+/.cache/             # Otras cachés de herramientas como Babel, ESLint
+
+# Babel
+.babelrc             # Configuración (si no quieres compartirla)
+.babelrc.js
+.babelrc.json
+.babelrc.cjs
+
+# ESLint
+.eslintcache         # Caché de ESLint
+
+# Docker
+/.docker/            # Carpeta con configuraciones específicas locales
+docker-compose.override.yml  # Configuración local personalizada
+*.bak                # Backups automáticos
+
+# Archivos temporales de Docker Compose
+*.pid                # PIDs generados por procesos
+*.sock               # Archivos de sockets
