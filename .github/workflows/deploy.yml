@@ -53,15 +53,19 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: ${{ secrets.EC2_PRIVATE_KEY }}
         script: |
+          export NODE_ENV=production
           sudo yum update -y
           sudo yum install -y docker
+          docker ps -a
           sudo curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | jq -r .tag_name)/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
           sudo usermod -aG docker ec2-user
+          docker --version
           docker-compose --version
-          docker ps
+          docker ps -a
+          cd ~/halther/
           docker-compose down
-          docker ps
+          cd ..
           docker pull ${{ secrets.DOCKER_USERNAME }}/flask-backend:latest
           docker pull ${{ secrets.DOCKER_USERNAME }}/vue-frontend:latest
           docker-compose -f ~/halther/docker-compose.yml up --build -d
