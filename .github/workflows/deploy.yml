@@ -59,6 +59,9 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           sudo usermod -aG docker ec2-user
           docker-compose --version
+          docker ps
+          docker-compose down
+          docker ps
           docker pull ${{ secrets.DOCKER_USERNAME }}/flask-backend:latest
           docker pull ${{ secrets.DOCKER_USERNAME }}/vue-frontend:latest
-          docker-compose -f ~/halther/docker-compose.yml up -d
+          docker-compose -f ~/halther/docker-compose.yml up --build -d

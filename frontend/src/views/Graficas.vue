@@ -3,14 +3,14 @@
     <!-- Gráfica de Barras por Estados -->
     <div class="chart-wrapper">
       <h2>Gráfica de Barras (Por Estados)</h2>
-      <p>Comparativa de suicidios por estados a lo largo de los años.</p>
+      <p>Comparativa de suicidios por estados a lo largo de 2021 a 2023.</p>
       <div id="bar-chart-states"></div>
     </div>
 
     <!-- Gráfica de Barras Total Nacional -->
     <div class="chart-wrapper">
       <h2>Gráfica de Barras (Total Nacional)</h2>
-      <p>Total de suicidios nacionales por año.</p>
+      <p>Total de suicidios nacionales de 2021 a 2023.</p>
       <div id="bar-chart-total"></div>
     </div>
 
@@ -28,13 +28,15 @@
       <div id="pie-chart"></div>
     </div>
   </div>
+
+  <div class="signature">
+    <p>✨ Grav estuvo aquí ✨</p>
+  </div>
 </template>
 
 <script>
 import axios from "axios";
-///import ApexCharts from "apexcharts"; //para mi DEVelopment
-import ApexCharts from 'apexcharts'; //para mi BUILD de produccion en TEST
-
+import ApexCharts from "apexcharts";
 
 export default {
   data() {
@@ -43,8 +45,7 @@ export default {
         chart: {
           id: "bar-chart-states",
           type: "bar",
-          height: "100%",
-
+          height: "400px",
         },
         xaxis: {
           categories: [],
@@ -54,13 +55,13 @@ export default {
             text: "Número de suicidios por Estados",
           },
         },
+        series: [], // Series vacías inicializadas
       },
       barChartTotalOptions: {
         chart: {
           id: "bar-chart-total",
           type: "bar",
-          height: "100%",
-
+          height: "400px",
         },
         xaxis: {
           categories: ["2021", "2022", "2023"],
@@ -70,15 +71,91 @@ export default {
             text: "Total Nacional",
           },
         },
+        series: [], // Series vacías inicializadas
       },
       lineChartOptions: {
         chart: {
           id: "line-chart",
           type: "line",
-          height: "100%",
+          height: "400px",
         },
         xaxis: {
-          categories: [
+          categories: [],
+        },
+        yaxis: {
+          title: {
+            text: "Número de suicidios",
+          },
+        },
+        series: [], // Series vacías inicializadas
+      },
+      pieChartOptions: {
+        chart: {
+          id: "pie-chart",
+          type: "pie",
+          height: "400px",
+        },
+        labels: [],
+        series: [], // Series vacías inicializadas
+      },
+    };
+  },
+  methods: {
+    getApiBaseUrl() {
+      return process.env.NODE_ENV === "production"
+        ? "http://34.213.42.7:5000"
+        : "http://127.0.0.1:5000";
+    },
+    fetchBarChartData() {
+      axios
+        .get(`${this.getApiBaseUrl()}/api/suicidios_por_anio`)
+        .then((response) => {
+          const data = response.data;
+          const estadosData = data.filter(
+            (item) => item.Entidad && item.Entidad !== "Total"
+          );
+
+          // Configuración para BarChart de Estados
+          this.barChartStatesOptions.xaxis.categories = estadosData.map(
+            (item) => item.Entidad
+          );
+          this.barChartStatesOptions.series = [
+            { name: "2021", data: estadosData.map((item) => item["2021"]) },
+            { name: "2022", data: estadosData.map((item) => item["2022"]) },
+            { name: "2023", data: estadosData.map((item) => item["2023"]) },
+          ];
+
+          // Configuración para BarChart de Total Nacional
+          const totalData = data.find((item) => item.Entidad === "Total");
+          if (totalData) {
+            this.barChartTotalOptions.series = [
+              {
+                name: "Total Nacional",
+                data: [totalData["2021"], totalData["2022"], totalData["2023"]],
+              },
+            ];
+          }
+
+          // Renderizar gráficas
+          this.renderBarChartStates();
+          this.renderBarChartTotal();
+        })
+        .catch((error) =>
+          console.error("Error al cargar los datos del gráfico de barras:", error)
+        );
+    },
+    fetchLineChartData() {
+      axios
+        .get(`${this.getApiBaseUrl()}/api/metodos_por_anio`)
+        .then((response) => {
+          const data = response.data;
+
+          this.lineChartOptions.series = data.map((method) => ({
+            name: method.Metodo,
+            data: method.Totales,
+          }));
+
+          this.lineChartOptions.xaxis.categories = [
             "2010",
             "2011",
             "2012",
@@ -93,166 +170,56 @@ export default {
             "2021",
             "2022",
             "2023",
-          ],
-        },
-        yaxis: {
-          title: {
-            text: "Número de suicidios",
-          },
-        },
-      },
-      pieChartOptions: {
-        chart: {
-          id: "pie-chart",
-          type: "pie",
-          height: "100%",
-        },
-        labels: [],
-      },
-      barStatesData: [],
-      barTotalData: [],
-      lineData: [],
-      pieData: [],
-    };
-  },
-  methods: {
-    getApiBaseUrl() {
-      if (process.env.NODE_ENV === "production") {
-        return "http://34.213.42.7:5000"; // Reemplaza con la IP pública de tu backend
-      }
-      return "http://127.0.0.1:5000"; // Dirección para desarrollo local
-    },
-    fetchBarChartData() {
-      axios.get(`${this.getApiBaseUrl()}/api/suicidios_por_anio`)
-      .then((response) => {
-        const data = response.data;
-        console.log("Datos recibidos para BarChart:", data);
-  
-        // Validar que los datos sean correctos
-        if (!Array.isArray(data) || data.length === 0) {
-          console.error("Datos inválidos o vacíos:", data);
-          return;
-        }
+          ];
 
-        // Filtrar datos para los Estados (excluyendo el total)
-        const estadosData = data.filter(
-          (item) =>
-            item.Entidad &&
-            item.Entidad !== "Total" && // Ajustado a 'Total'
-            item["2021"] != null
+          this.renderLineChart();
+        })
+        .catch((error) =>
+          console.error("Error al cargar los datos del gráfico de líneas:", error)
         );
-
-        // Configuración para BarChart de Estados
-        this.barChartStatesOptions.xaxis.categories = estadosData.map(
-          (item) => item.Entidad
-        );
-        this.barChartStatesOptions.series = [
-          { name: "2021", data: estadosData.map((item) => item["2021"]) },
-          { name: "2022", data: estadosData.map((item) => item["2022"]) },
-          { name: "2023", data: estadosData.map((item) => item["2023"]) },
-        ];
-
-        // Obtener datos para Total Nacional
-        const totalData = data.find((item) => item.Entidad === "Total"); // Ajustado a 'Total'
-        if (!totalData) {
-          console.error("Total no encontrado.");
-          return;
-        }
-
-        // Configuración para BarChart de Total Nacional
-        this.barChartTotalOptions.series = [
-          {
-            name: "Total Nacional",
-            data: [totalData["2021"], totalData["2022"], totalData["2023"]],
-          },
-        ];
-
-        // Renderizar gráficas
-        this.renderBarChartStates();
-        this.renderBarChartTotal();
-      })
-      .catch((error) => {
-        console.error("Error al cargar los datos del gráfico de barras:", error);
-      });
-    },
-    fetchLineChartData() {
-      axios.get(`${this.getApiBaseUrl()}/api/metodos_por_anio`)
-        .then(response => {
-          const data = response.data;
-          this.lineData = data;
-
-          // Encontrar el valor máximo en los datos de las series
-          const allValues = data.flatMap(method => method.Totales); // Obtiene todos los valores de 'Totales'
-          const maxValue = Math.max(...allValues); // Encuentra el valor máximo
-
-          // Configura el eje Y dinámicamente
-          this.lineChartOptions.yaxis.max = maxValue + 10; // Puedes añadir un margen al máximo si lo deseas
-
-      // Configuración de las series de datos para el gráfico de líneas
-      this.lineChartOptions.series = data.map(method => ({
-        name: method.Metodo,
-        data: method.Totales
-      }));
-
-      this.renderLineChart();
-      })
-      .catch(error => {
-        console.error('Error al cargar los datos del gráfico de líneas:', error);
-      });
     },
     fetchPieChartData() {
       axios
         .get(`${this.getApiBaseUrl()}/api/metodos_2023`)
         .then((response) => {
           const data = response.data;
-          this.pieData = data;
           this.pieChartOptions.labels = data.map((item) => item.Metodo);
           this.pieChartOptions.series = data.map((item) => item["2023"]);
+
           this.renderPieChart();
         })
-        .catch((error) => {
-          console.error("Error al cargar los datos del gráfico de pastel:", error);
-        });
+        .catch((error) =>
+          console.error("Error al cargar los datos del gráfico de pastel:", error)
+        );
     },
     renderBarChartStates() {
-      this.$nextTick(() => {
-        const chart = new ApexCharts(
-          document.querySelector("#bar-chart-states"),
-          this.barChartStatesOptions
-        );
-        chart.render();
-      });
+      const chart = new ApexCharts(
+        document.querySelector("#bar-chart-states"),
+        this.barChartStatesOptions
+      );
+      chart.render();
     },
-
     renderBarChartTotal() {
-      this.$nextTick(() => {
-        const chart = new ApexCharts(
-          document.querySelector("#bar-chart-total"),
-          this.barChartTotalOptions
-        );
-        chart.render();
-      });
+      const chart = new ApexCharts(
+        document.querySelector("#bar-chart-total"),
+        this.barChartTotalOptions
+      );
+      chart.render();
     },
-
     renderLineChart() {
-      this.$nextTick(() => {
-        const chart = new ApexCharts(
-          document.querySelector("#line-chart"),
-          this.lineChartOptions
-        );
-        chart.render();
-      });
+      const chart = new ApexCharts(
+        document.querySelector("#line-chart"),
+        this.lineChartOptions
+      );
+      chart.render();
     },
-
     renderPieChart() {
-      this.$nextTick(() => {
-        const chart = new ApexCharts(
-          document.querySelector("#pie-chart"),
-          this.pieChartOptions
-        );
-        chart.render();
-      });
-    }
+      const chart = new ApexCharts(
+        document.querySelector("#pie-chart"),
+        this.pieChartOptions
+      );
+      chart.render();
+    },
   },
   mounted() {
     this.fetchBarChartData();
@@ -294,4 +261,29 @@ export default {
   width: 100%;
   min-height: 400px;
 }
+
+.signature {
+  text-align: center;
+  margin-top: 20px;
+  padding: 10px;
+  background: linear-gradient(90deg, #ffafbd, #ffc3a0);
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 </style>
