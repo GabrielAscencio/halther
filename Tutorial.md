@@ -2,7 +2,11 @@
 ## Pero si en fa 👉
 
 Aprende a poner y ejecutar halther en tu PC - MacOS todavía no hago tutorial.
-Sí cambian algunas cosas entre sistemas operativos.
+Sí cambian algunas cosas entre sistemas operativos. Tambien luego hago del Linux.
+Si ya le ultra sabes al linux, primero dejame decirte que:
+
+👉😏👉que pro 😎🐕‍🦺
+No tendrás ni problemas para hacer todo esto e incluso buildear sin tutoriales.
 
 ## Windows 🪟
 
