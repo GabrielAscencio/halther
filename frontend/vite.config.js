@@ -13,7 +13,7 @@ export default defineConfig({
       autoImport: true,
     }),
   ],
-  define: { 'process.env': {} },
+  define: { 'process.env': {NODE_ENV: 'development'} },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),

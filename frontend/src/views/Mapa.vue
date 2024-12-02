@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     async fetchData() {
-      const url = `${await this.getApiBaseUrl()}/api/suicidios?year=${this.selectedYear}`;
+      const url = `${this.getApiBaseUrl()}/api/suicidios?year=${this.selectedYear}`;
       try {
         const response = await fetch(url);
         const data = await response.json();
@@ -60,17 +60,11 @@ export default {
         alert("Error al conectar con el servidor.");
       }
     },
-    async getApiBaseUrl() {
-      try {
-        const response = await fetch("http://169.254.169.254/latest/meta-data/public-ipv4");
-        if (response.ok) {
-          const ip = await response.text();
-          return `http://${ip}:5000`;
-        }
-      } catch (error) {
-        console.warn("No se pudo obtener la IP pública de AWS. Usando 127.0.0.1");
+    getApiBaseUrl() {
+      if (process.env.NODE_ENV === 'production') {
+        return "http://34.213.42.7:5000"; // Reemplaza esta IP con la IP pública de tu backend
       }
-      return "http://127.0.0.1:5000";
+      return "http://127.0.0.1:5000"; // Dirección para desarrollo local
     },
     updateMap(data) {
       // Limpiar los marcadores previos

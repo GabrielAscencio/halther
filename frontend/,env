@@ -1,0 +1,2 @@
+VITE_API_BASE_URL=http://localhost:5000  # URL para desarrollo
+VITE_API_BASE_URL_PROD=http://<tu-ip-publica-ec2>:5000  # URL para producción
