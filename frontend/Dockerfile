@@ -18,12 +18,13 @@ RUN npm run build
 
 # Usar nginx para servir los archivos estáticos
 FROM nginx:alpine
+# Copiar los archivos de construcción de la imagen anterior al directorio de nginx
+COPY --from=build /halther/frontend/dist /usr/share/nginx/html
 
 # Copiar el archivo nginx.conf al contenedor
 COPY ./frontend/nginx.conf /etc/nginx/nginx.conf
-
-# Copiar los archivos de construcción de la imagen anterior al directorio de nginx
-COPY --from=build /halther/frontend/dist /usr/share/nginx/html
+# Copiar el archivo nginx.conf al contenedor
+COPY ./frontend/default.conf /etc/nginx/conf.d/default.conf
 
 # Exponer el puerto 80 para servir la aplicación
 EXPOSE 80
