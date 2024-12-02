@@ -11,7 +11,7 @@ yarn-error.log*
 pnpm-debug.log*
 *.log                # Otros archivos de logs
 .idea                # Configuración de IDEs (IntelliJ, PyCharm)
-.vscode              # Configuración de VSCode
+.vscode/              # Configuración de VSCode
 *.sw?                # Archivos de swap de editores de texto
 /.codigo/
 
@@ -46,3 +46,4 @@ docker-compose.override.yml  # Configuración local personalizada
 # Archivos temporales de Docker Compose
 *.pid                # PIDs generados por procesos
 *.sock               # Archivos de sockets
+.vscode/settings.json
