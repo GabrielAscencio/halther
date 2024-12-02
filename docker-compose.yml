@@ -6,6 +6,8 @@ services:
       dockerfile: backend/Dockerfile
     ports:
       - "5000:5000"
+    volumes:
+      - ./backend:/halther/backend 
     networks:
       - app-network
 
@@ -17,6 +19,8 @@ services:
       - "80:80"
     networks:
       - app-network
+    depends_on:
+      - backend
 
 networks:
   app-network:
