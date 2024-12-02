@@ -25,13 +25,16 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
+    - name: List files in backend directory
+      run: ls -R backend
+
     # Construir y subir las imágenes tanto back como front
     - name: Build and Push Backend Docker Image
       uses: docker/build-push-action@v4
       with:
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/flask-backend:latest
-        context: backend
+        context: .
         file: backend/Dockerfile
     
     - name: Build and Push Frontend Docker Image
@@ -39,7 +42,7 @@ jobs:
       with:
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/vue-frontend:latest
-        context: frontend
+        context: .
         file: frontend/Dockerfile
 
     # Deploy to AWS EC2
