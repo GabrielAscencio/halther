@@ -5,6 +5,10 @@ This is a project of data engineering with the mission to deploy an app in produ
 
 This can be deployed locally, bit this repository in branch **prod** will also deploy in an EC2 instance.
 
+## Tutorial hacé tu Halther pero super en FA
+
+Para el tutorial rapidísimo con Docker, haz clic [aquí](tutorial.md).
+
 ### Desarrollo y Producción con CI/CD
 
 Halther pretende convertirse en una aplicación amigable para desempeñar lo aprendido para ingeniería en datos e inteligencia organizacional.
