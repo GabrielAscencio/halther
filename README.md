@@ -7,7 +7,7 @@ This can be deployed locally, bit this repository in branch **prod** will also d
 
 ## Tutorial hacé tu Halther pero super en FA
 
-Para el tutorial rapidísimo con Docker, haz clic [aquí](tutorial.md).
+Para el tutorial rapidísimo con Docker, haz clic [aquí](Tutorial.md).
 
 ### Desarrollo y Producción con CI/CD
 
