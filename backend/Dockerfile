@@ -5,7 +5,7 @@ FROM python:3.9-slim
 WORKDIR /halther/backend
 
 # Copiar el archivo requirements.txt de tu máquina local al contenedor
-COPY backend/requirements.txt .
+COPY requirements.txt .
 
 # Instalar dependencias
 RUN pip install --no-cache-dir -r requirements.txt
