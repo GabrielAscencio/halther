@@ -28,8 +28,16 @@ const router = createRouter({
 
 loadFonts()
 
+console.log('NODE_ENV:', process.env.NODE_ENV);
+
+if (process.env.NODE_ENV === 'production') {
+  console.log('Running in production mode');
+}
+else console.log('Running in DEV mode');
+
 createApp(App)
   .use(vuetify)
   .use(router) // Agregar el router a la app
   .use(VueApexCharts) // Agregar ApexCharts a la app
   .mount('#app')
+

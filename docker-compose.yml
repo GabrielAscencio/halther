@@ -12,6 +12,8 @@ services:
       - app-network
 
   frontend:
+    environment:
+      - NODE_ENV=${NODE_ENV}
     build:
       context: .
       dockerfile: frontend/Dockerfile
