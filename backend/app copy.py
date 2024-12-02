@@ -21,14 +21,15 @@ def get_suicidios():
         conn = pymysql.connect(**db_config)
         cursor = conn.cursor()
 
-        query = """
-            SELECT a.Entidad, a.%s_Total, u.Latitud, u.Longitud
+        query = f"""
+            SELECT a.Entidad, a.{year}_Total, u.Latitud, u.Longitud
             FROM ambos AS a
             LEFT JOIN ubicaciones AS u ON a.Entidad = u.Entidad
             WHERE u.Latitud IS NOT NULL;
         """
-        cursor.execute(query, (year,))
+        cursor.execute(query)
         results = cursor.fetchall()
+        conn.close()
 
         data = [
             {
@@ -43,16 +44,17 @@ def get_suicidios():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    finally:
-        conn.close()
+
 
 # Ruta para obtener la distribución de métodos de suicidio
 @app.route("/api/methods", methods=["GET"])
 def get_methods():
     try:
+        # Conectar a la base de datos
         conn = pymysql.connect(**db_config)
         cursor = conn.cursor()
 
+        # Consulta para agrupar métodos de suicidio y contar su ocurrencia
         query = """
             SELECT Metodo, COUNT(*) AS Total
             FROM suicidios
@@ -60,15 +62,15 @@ def get_methods():
         """
         cursor.execute(query)
         results = cursor.fetchall()
+        conn.close()
 
+        # Formatear los resultados en JSON
         data = [{"method": row[0], "count": row[1]} for row in results]
         return jsonify(data)
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    finally:
-        conn.close()
-
+    
 # Ruta para obtener los suicidios por año
 @app.route("/api/suicidios_por_agnio", methods=["GET"])
 def get_suicidios_por_agnio():
@@ -76,14 +78,17 @@ def get_suicidios_por_agnio():
         conn = pymysql.connect(**db_config)
         cursor = conn.cursor()
 
+        # Query para obtener los suicidios por año
         query = """
-            SELECT a.Entidad, a.2021_Total, a.2022_Total, a.2023_Total
+            SELECT a.Entidad, a.2021_Total, a.2022_Total, a.2023_Total  # Suponiendo que tienes las columnas por año
             FROM ambos AS a
             WHERE a.2021_Total IS NOT NULL OR a.2022_Total IS NOT NULL OR a.2023_Total IS NOT NULL;
         """
         cursor.execute(query)
         results = cursor.fetchall()
+        conn.close()
 
+        # Procesar los resultados
         data = [
             {
                 "Entidad": row[0],
@@ -97,10 +102,8 @@ def get_suicidios_por_agnio():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    finally:
-        conn.close()
-
-# Endpoint para la gráfica de Barchart
+    
+#Endpoint para la grafica de Barchart
 @app.route("/api/suicidios_por_anio", methods=["GET"])
 def get_suicidios_por_anio():
     try:
@@ -115,6 +118,7 @@ def get_suicidios_por_anio():
         """
         cursor.execute(query)
         results = cursor.fetchall()
+        conn.close()
 
         data = [
             {
@@ -129,10 +133,8 @@ def get_suicidios_por_anio():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    finally:
-        conn.close()
-
-# Endpoint para la gráfica de Linechart
+    
+#Endpoint para la grafica de  Linechart
 @app.route("/api/metodos_por_anio", methods=["GET"])
 def get_metodos_por_anio():
     try:
@@ -151,6 +153,7 @@ def get_metodos_por_anio():
         """
         cursor.execute(query)
         results = cursor.fetchall()
+        conn.close()
 
         data = [
             {
@@ -163,10 +166,8 @@ def get_metodos_por_anio():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    finally:
-        conn.close()
-
-# Endpoint para la gráfica de Piechart
+    
+#Endpoint para la grafica de  Piechart
 @app.route("/api/metodos_2023", methods=["GET"])
 def get_metodos_2023():
     try:
@@ -180,6 +181,7 @@ def get_metodos_2023():
         """
         cursor.execute(query)
         results = cursor.fetchall()
+        conn.close()
 
         data = [
             {
@@ -192,8 +194,6 @@ def get_metodos_2023():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    finally:
-        conn.close()
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
