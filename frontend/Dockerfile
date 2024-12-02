@@ -15,6 +15,8 @@ COPY ./frontend/ .
 
 # Compilar la aplicación para producción
 RUN npm run build
+RUN npm install -g serve
+CMD ["serve", "-s", "dist", "-l", "80"]
 
 # Usar nginx para servir los archivos estáticos
 FROM nginx:alpine

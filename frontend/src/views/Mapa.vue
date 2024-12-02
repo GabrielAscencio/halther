@@ -25,7 +25,7 @@
   </div>
 </template>
 
-<<script>
+<script>
 // Importa Leaflet
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css'; // Importa los estilos de Leaflet
@@ -73,17 +73,18 @@ export default {
       return "http://127.0.0.1:5000";
     },
     updateMap(data) {
+      // Limpiar los marcadores previos
       this.markers.forEach(marker => this.mapInstance.removeLayer(marker));
       this.markers = [];
 
       // Crear un ícono personalizado
       const customIcon = L.icon({
-        iconUrl: '/images/marker-icon.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowUrl: '/images/marker-shadow.png',
-        shadowSize: [41, 41],
+        iconUrl: '/images/marker-icon.png', // Asegúrate que esté en el directorio correcto
+        iconSize: [25, 41], // Tamaño del ícono
+        iconAnchor: [12, 41], // Ancla del ícono para posicionarlo correctamente
+        popupAnchor: [1, -34], // Lugar donde aparecerá el popup respecto al ícono
+        shadowUrl: '/images/marker-shadow.png', // Sombra del ícono
+        shadowSize: [41, 41], // Tamaño de la sombra
       });
 
       // Agregar marcadores con el ícono personalizado
